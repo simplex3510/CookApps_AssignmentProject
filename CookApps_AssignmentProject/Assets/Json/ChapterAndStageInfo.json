@@ -1,0 +1,26 @@
+[
+    null,
+    {
+        "StageList": [
+            null,
+            {
+                "EnemyCount": 3,
+                "IsStageClear": false,
+                "EnemyMatrix": [
+                    [ 1, 0, 0 ],
+                    [ 1, 0, 0 ],
+                    [ 1, 0, 0 ]
+                ]
+            },
+            {
+                "EnemyCount": 4,
+                "IsStageClear": false,
+                "EnemyMatrix": [
+                    [ 1, 0, 0 ],
+                    [ 1, 2, 0 ],
+                    [ 1, 0, 0 ]
+                ]
+            }
+        ]
+    }
+]
