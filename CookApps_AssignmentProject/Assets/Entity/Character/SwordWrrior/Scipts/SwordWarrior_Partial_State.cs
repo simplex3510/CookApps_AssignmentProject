@@ -1,9 +1,8 @@
-using Base.Entity;
-using Base.State;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
+using Base.Entity;
+using Base.State;
 
 public partial class SwordWarrior
 {
@@ -50,8 +49,29 @@ public partial class SwordWarrior
 
     public override void DamagedCharacter(float damage)
     {
-        StatData.CurHP -= damage;
-        Debug.Log($"CurHP: {StatData.CurHP}, DMG: {damage}");
+        if (IsDie())
+        {
+            Debug.Log($"{gameObject.name} is Died");
+        }
+        else
+        {
+            StatData.CurHP -= (damage - StatData.DEF);
+            Debug.Log($"CurHP: {StatData.CurHP}, DMG: {damage}");
+        }
+    }
+
+    public override bool IsDie()
+    {
+        if (StatData.CurHP <= 0)
+        {
+            SpawnManager.Instance.spawnedMobList.Remove(this);
+            Destroy(gameObject);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     #endregion
 
@@ -75,20 +95,33 @@ public partial class SwordWarrior
                         ChangeState(EState.Move);
                     }
                     break;
+
                 case EState.Move:
+                    if (SpawnManager.Instance.spawnedMobList.Count == 0)
+                    {
+                        ChangeState(EState.Idle);
+                        break;
+                    }
                     detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
                     if (detectedTarget != null)
-                    {
+                    {   
                         ChangeState(EState.Attack);
                     }
                     break;
+
                 case EState.Attack:
+                    if (SpawnManager.Instance.spawnedMobList.Count == 0)
+                    {
+                        ChangeState(EState.Idle);
+                        break;
+                    }
                     detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
                     if (detectedTarget == null)
                     {
                         ChangeState(EState.Move);
                     }
                     break;
+
                 case EState.Skill:
                     detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
                     if (detectedTarget != null)
@@ -100,12 +133,13 @@ public partial class SwordWarrior
                         ChangeState(EState.Move);
                     }
                     break;
+
                 default:
                     Debug.LogError("UpdateFSM Error");
                     break;
             }
 
-            Debug.Log(curState.ToString());
+            Debug.Log($"{curState}");
             FSM.UpdateState();
             yield return null;
         }

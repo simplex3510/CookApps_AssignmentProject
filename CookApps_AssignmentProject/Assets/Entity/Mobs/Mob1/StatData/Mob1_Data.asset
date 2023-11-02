@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Mob1_Data
   m_EditorClassIdentifier: Assembly-CSharp::EntityData
   skillCoolTime: 3
-  maxHp: 30
+  maxHP: 30
+  curHP: 0
   attack: 10
-  defensive: 10
-  speed: 10
+  defensive: 0
+  speed: 0

@@ -7,10 +7,9 @@ namespace Base.Entity
 {
     public interface IDamagable
     {
-
-
         public void AttackTarget();
         public void DamagedCharacter(float damage);
+        public bool IsDie();
     }
 
     public abstract class BaseEntity : MonoBehaviour, IDamagable
@@ -35,5 +34,6 @@ namespace Base.Entity
 
         public abstract void AttackTarget();
         public abstract void DamagedCharacter(float damage);
+        public abstract bool IsDie();
     }
 }
