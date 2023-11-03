@@ -14,6 +14,7 @@ public enum EChapterNumber : int
 public class ChapterManager : MonoSingleton<ChapterManager>
 {
     public  EChapterNumber CurChapterNumber { get; private set; } = EChapterNumber.Chapter1;
+
     public List<BaseChapter> ChapterList { get; private set; } = new List<BaseChapter>()
     {
         null    // 0번 index는 편의를 위해 null 할당
@@ -25,6 +26,13 @@ public class ChapterManager : MonoSingleton<ChapterManager>
         switch (CurChapterNumber)
         {
             case EChapterNumber.Chapter1:
+                // ----- 임시 코드
+                ChapterList.Add(new Chapter1());
+                ChapterList[1].StageList.Add(new Stage1());
+                ChapterList[1].StageList.Add(new Stage2());
+                JsonManager.Instance.ConvertCSharpToJson(ChapterList, "ChapterAndStageInfo");
+                // -----
+
                 ChapterList = JsonManager.Instance.ConvertJsonToCSharp<List<BaseChapter>>("ChapterAndStageInfo");
                 SpawnManager.Instance.SpawnEnemies((int)CurChapterNumber, 1);
                 break;
@@ -34,15 +42,6 @@ public class ChapterManager : MonoSingleton<ChapterManager>
             default:
                 break;
         }
-
-        //ChapterList[1].StageList.Add(new Stage1());
-        //ChapterList[1].StageList.Add(new Stage2());
-
-        //JsonManager.Instance.ConvertCSharpToJson(ChapterList, "ChapterAndStageInfo");
-
-        /**********/
-
-        //ChapterList = JsonManager.Instance.ConvertJsonToCSharp<List<BaseChapter>>("ChapterAndStageInfo");
     }
 }
 
