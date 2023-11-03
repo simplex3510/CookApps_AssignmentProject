@@ -17,4 +17,5 @@ MonoBehaviour:
   curHP: 0
   attack: 10
   defensive: 0
-  speed: 0
+  speed: 5
+  dead: 1

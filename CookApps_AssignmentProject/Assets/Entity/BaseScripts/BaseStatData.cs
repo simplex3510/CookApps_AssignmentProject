@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EntityData", menuName = "Scriptable Object/EntityData")]
-public class EntityData : ScriptableObject
+[System.Serializable]
+public class BaseStatData
 {
     [SerializeField] private float skillCoolTime;
     public float SkillCoolTime { get { return skillCoolTime; } }
@@ -13,8 +13,8 @@ public class EntityData : ScriptableObject
 
     [SerializeField] private float curHP;
     public float CurHP
-    { 
-        get { return curHP; } 
+    {
+        get { return curHP; }
         set { curHP = MaxHP < value ? maxHP : value; }
     }
 
@@ -28,8 +28,8 @@ public class EntityData : ScriptableObject
     public float SPD { get { return speed; } }
 
     [SerializeField] private bool dead;
-    public bool DEAD 
-    { 
+    public bool DEAD
+    {
         get { return dead = (curHP <= 0) ? true : false; }
     }
 

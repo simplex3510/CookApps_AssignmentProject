@@ -1,10 +1,10 @@
+using Base.Entity;
+using Base.State;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Base.Entity;
-using Base.State;
 
-public partial class SwordWarrior
+public partial class Mob1
 {
     #region public State Method
     public void CheckNearestEnemy()
@@ -15,15 +15,15 @@ public partial class SwordWarrior
         // 3. 이 시퀀스를 상태전이마다 반복하여 최근거리 적을 찾는다.
 
         float leastDistance = float.MaxValue;
-        Vector2 charPos = new Vector2(transform.position.x, transform.position.y);
-        foreach (var enemy in SpawnManager.Instance.spawnedMobList)
+        Vector2 enemyPos = new Vector2(transform.position.x, transform.position.y);
+        foreach (var character in SpawnManager.Instance.spawnedCharList)
         {
-            Vector2 enemyPos = new Vector2(enemy.transform.position.x, enemy.transform.position.y);
-            float distance = Vector2.Distance(charPos, enemyPos);
+            Vector2 charPos = new Vector2(character.transform.position.x, character.transform.position.y);
+            float distance = Vector2.Distance(enemyPos, charPos);
             if (distance < leastDistance)
             {
                 leastDistance = distance;
-                target = enemy;
+                target = character;
             }
         }
 
@@ -57,7 +57,7 @@ public partial class SwordWarrior
     public override void DamagedCharacter(float damage)
     {
         StatData.CurHP -= (damage - StatData.DEF);
-        
+
         if (StatData.DEAD)
         {
             Debug.Log($"{gameObject.name} is Died");
@@ -97,9 +97,9 @@ public partial class SwordWarrior
                         ChangeState(EState.Idle);
                         break;
                     }
-                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
+                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y), new Vector2(1.2f, 1.2f), 0f, EnemyLayerMask);
                     if (detectedTarget != null && detectedTarget.GetComponent<BaseEntity>() == target)
-                    {   
+                    {
                         ChangeState(EState.Attack);
                     }
                     break;
@@ -110,7 +110,7 @@ public partial class SwordWarrior
                         ChangeState(EState.Idle);
                         break;
                     }
-                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
+                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y), new Vector2(1.2f, 1.2f), 0f, EnemyLayerMask);
                     if (detectedTarget == null || target == null)
                     {
                         ChangeState(EState.Move);
@@ -118,7 +118,7 @@ public partial class SwordWarrior
                     break;
 
                 case EState.Skill:
-                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y - 0.4f), new Vector2(2, 1), 0f, EnemyLayerMask);
+                    detectedTarget = Physics2D.OverlapBox(new Vector2(transform.position.x, transform.position.y), new Vector2(1.2f, 1.2f), 0f, EnemyLayerMask);
                     if (detectedTarget != null && detectedTarget.GetComponent<BaseEntity>() == target)
                     {
                         ChangeState(EState.Attack);
@@ -166,66 +166,20 @@ public partial class SwordWarrior
     #endregion
 }
 
-public class SwordWarrior_IdleState : BaseState
+public class Mob1_IdleState : BaseState
 {
-    public SwordWarrior_IdleState(SwordWarrior entity) : base(entity) { }
+    public Mob1_IdleState(Mob1 entity) : base(entity) { }
 
     public override void OnStateEnter()
     {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.AnimatorCtrller.SetTrigger(swordWarrior.AnimParam_Idle);
+        Mob1 mob1 = entity as Mob1;
+        mob1.AnimatorCtrller.SetTrigger(mob1.AnimParam_Idle);
     }
 
     public override void OnStateExit()
     {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.CheckNearestEnemy();
-    }
-
-    public override void OnStateUpdate()
-    {
-        // Blank
-    }
-}
-
-public class SwordWarrior_MoveState : BaseState
-{
-    public SwordWarrior_MoveState(SwordWarrior entity) : base(entity) { }
-
-    public override void OnStateEnter()
-    {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.AnimatorCtrller.SetTrigger(swordWarrior.AnimParam_Move);
-    }
-
-    public override void OnStateExit()
-    {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.CheckNearestEnemy();
-    }
-
-    public override void OnStateUpdate()
-    {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.MoveToTarget();
-    }
-}
-
-public class SwordWarrior_AttackState : BaseState
-{
-    public SwordWarrior_AttackState(SwordWarrior entity) : base(entity) { }
-
-    public override void OnStateEnter()
-    {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.AnimatorCtrller.SetBool(swordWarrior.AnimParam_Attack, true);
-    }
-
-    public override void OnStateExit()
-    {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.CheckNearestEnemy();
-        swordWarrior.AnimatorCtrller.SetBool(swordWarrior.AnimParam_Attack, false);
+        Mob1 mob1 = entity as Mob1;
+        mob1.CheckNearestEnemy();
     }
 
     public override void OnStateUpdate()
@@ -234,24 +188,70 @@ public class SwordWarrior_AttackState : BaseState
     }
 }
 
-public class SwordWarrior_SkillState : BaseState
+public class Mob1_MoveState : BaseState
 {
-    public SwordWarrior_SkillState(SwordWarrior entity) : base(entity) { }
+    public Mob1_MoveState(Mob1 entity) : base(entity) { }
 
     public override void OnStateEnter()
     {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.AnimatorCtrller.SetTrigger(swordWarrior.AnimParam_Skill);
+        Mob1 mob1 = entity as Mob1;
+        mob1.AnimatorCtrller.SetTrigger(mob1.AnimParam_Move);
     }
 
     public override void OnStateExit()
     {
-        SwordWarrior swordWarrior = entity as SwordWarrior;
-        swordWarrior.CheckNearestEnemy();
+        Mob1 mob1 = entity as Mob1;
+        mob1.CheckNearestEnemy();
     }
 
     public override void OnStateUpdate()
     {
+        Mob1 mob1 = entity as Mob1;
+        mob1.MoveToTarget();
+    }
+}
 
+public class Mob1_AttackState : BaseState
+{
+    public Mob1_AttackState(Mob1 entity) : base(entity) { }
+
+    public override void OnStateEnter()
+    {
+        Mob1 mob1 = entity as Mob1;
+        mob1.AnimatorCtrller.SetBool(mob1.AnimParam_Attack, true);
+    }
+
+    public override void OnStateExit()
+    {
+        Mob1 mob1 = entity as Mob1;
+        mob1.CheckNearestEnemy();
+        mob1.AnimatorCtrller.SetBool(mob1.AnimParam_Attack, false);
+    }
+
+    public override void OnStateUpdate()
+    {
+         
+    }
+}
+
+public class Mob1_SkillState : BaseState
+{
+    public Mob1_SkillState(Mob1 entity) : base(entity) { }
+
+    public override void OnStateEnter()
+    {
+        Mob1 mob1 = entity as Mob1;
+        mob1.AnimatorCtrller.SetTrigger(mob1.AnimParam_Skill);
+    }
+
+    public override void OnStateExit()
+    {
+        Mob1 mob1 = entity as Mob1;
+        mob1.CheckNearestEnemy();
+    }
+
+    public override void OnStateUpdate()
+    {
+         
     }
 }

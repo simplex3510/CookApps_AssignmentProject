@@ -15,6 +15,6 @@ MonoBehaviour:
   skillCoolTime: 10
   maxHP: 10
   curHP: 10
-  attack: 1
+  attack: 5
   defensive: 10
   speed: 5

@@ -11,7 +11,6 @@ public partial class SwordWarrior : BaseEntity
     public int AnimParam_Move { get; private set; }
     public int AnimParam_Attack { get; private set; }
     public int AnimParam_Skill { get; private set; }
-    public EntityData StatData { get { return statData; } private set { statData = value; } }
 
     private void Awake()
     {
@@ -23,7 +22,7 @@ public partial class SwordWarrior : BaseEntity
 
         AssignAnimationParameters();
 
-        statData.InitializeStatData();
+        StatData.InitializeStatData();
     }
 
     void Start()

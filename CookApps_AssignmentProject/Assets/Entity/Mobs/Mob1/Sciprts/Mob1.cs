@@ -3,61 +3,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using Base.Entity;
 using Base.State;
-using UnityEditor.U2D.Aseprite;
 
-public class Mob1 : BaseEntity
+public partial class Mob1 : BaseEntity
 {
-    public EntityData StatData { get { return statData; } private set { statData = value; } }
+    public int AnimParam_Idle { get; private set; }
+    public int AnimParam_Move { get; private set; }
+    public int AnimParam_Attack { get; private set; }
+    public int AnimParam_Skill { get; private set; }
 
-    public override void AttackTarget()
+    private void Awake()
     {
+        curState = EState.Idle;
+        AnimatorCtrller = GetComponent<Animator>();
+        StateDict = new Dictionary<EState, IStatable>();
+        InitializeStateDict();
+        FSM = new FiniteStateMachine(StateDict[curState]);
 
+        AssignAnimationParameters();
+
+        StatData.InitializeStatData();
     }
 
-    public override void DamagedCharacter(float damage)
+    private void Start()
     {
-        if (IsDie())
-        {
-            Debug.Log($"{gameObject.name} is Died");
-        }
-        else
-        {
-            statData.CurHP -= (damage - StatData.DEF);
-            Debug.Log($"CurHP: {statData.CurHP}, DMG: {damage}");
-        }
-    }
-
-    public override bool IsDie()
-    {
-        if (statData.CurHP <= 0)
-        {
-            SpawnManager.Instance.spawnedMobList.Remove(this);
-            Destroy(gameObject);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    protected override void AssignAnimationParameters()
-    {
-
-    }
-
-    protected override void ChangeState(EState eState)
-    {
-
+        StartCoroutine(UpdateFSM());
     }
 
     protected override void InitializeStateDict()
     {
-
+        StateDict[EState.Idle] = new Mob1_IdleState(this);
+        StateDict[EState.Move] = new Mob1_MoveState(this);
+        StateDict[EState.Attack] = new Mob1_AttackState(this);
+        StateDict[EState.Skill] = new Mob1_SkillState(this);
     }
 
-    protected override IEnumerator UpdateFSM()
+    protected override void AssignAnimationParameters()
     {
-        yield return null;
+        AnimParam_Idle = Animator.StringToHash("idle");
+        AnimParam_Move = Animator.StringToHash("move");
+        AnimParam_Attack = Animator.StringToHash("canAttack");
+        AnimParam_Skill = Animator.StringToHash("skill");
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(new Vector2(transform.position.x, transform.position.y), new Vector2(1.2f, 1.2f));
     }
 }

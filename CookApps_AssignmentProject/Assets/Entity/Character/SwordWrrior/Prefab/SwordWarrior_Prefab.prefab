@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -3361596897225807196}
   m_Layer: 7
   m_Name: SwordWarrior_Prefab
-  m_TagString: Untagged
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -135,7 +135,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 5
 --- !u!70 &8101198639341045944
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -168,8 +168,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.09, y: -0.11}
-  m_Size: {x: 1.06, y: 2.13}
+  m_Offset: {x: -0.10000002, y: -0.49773318}
+  m_Size: {x: 1.06, y: 1.2445339}
   m_Direction: 0
 --- !u!114 &-3361596897225807196
 MonoBehaviour:
@@ -183,8 +183,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb497e24eeee3c489fedba44922adb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  statData:
+    skillCoolTime: 5
+    maxHP: 100
+    curHP: 100
+    attack: 10
+    defensive: 5
+    speed: 5
+    dead: 0
   target: {fileID: 0}
-  statData: {fileID: 11400000, guid: da14dcc697f6e1c479663f4d9fc0f7f8, type: 2}
   EnemyLayerMask:
     serializedVersion: 2
     m_Bits: 64

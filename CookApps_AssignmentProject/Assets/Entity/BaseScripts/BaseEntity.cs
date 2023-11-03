@@ -9,7 +9,6 @@ namespace Base.Entity
     {
         public void AttackTarget();
         public void DamagedCharacter(float damage);
-        public bool IsDie();
     }
 
     public abstract class BaseEntity : MonoBehaviour, IDamagable
@@ -21,9 +20,11 @@ namespace Base.Entity
         protected FiniteStateMachine FSM { get; set; }
 
         [SerializeField]
-        protected BaseEntity target;
+        protected BaseStatData statData;
+        public BaseStatData StatData { get { return statData; } }
+
         [SerializeField]
-        protected EntityData statData;
+        protected BaseEntity target;
         [SerializeField]
         protected LayerMask EnemyLayerMask;
 
@@ -34,6 +35,5 @@ namespace Base.Entity
 
         public abstract void AttackTarget();
         public abstract void DamagedCharacter(float damage);
-        public abstract bool IsDie();
     }
 }
