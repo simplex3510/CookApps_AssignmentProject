@@ -18,4 +18,4 @@ MonoBehaviour:
   attack: 10
   defensive: 0
   speed: 5
-  dead: 1
+  dead: 0

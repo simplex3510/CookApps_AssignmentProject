@@ -26,7 +26,7 @@ public class ChapterManager : MonoSingleton<ChapterManager>
         switch (CurChapterNumber)
         {
             case EChapterNumber.Chapter1:
-                // ----- 임시 코드
+                // temp code
                 ChapterList.Add(new Chapter1());
                 ChapterList[1].StageList.Add(new Stage1());
                 ChapterList[1].StageList.Add(new Stage2());

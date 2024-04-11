@@ -7,29 +7,40 @@ using Singleton;
 
 public class JsonManager : MonoSingleton<JsonManager>
 {
-    public void ConvertCSharpToJson<T>(T csharpCode, string fileName)
+    private string jsonDirectoryPath;
+    private string JsonDirectoryPath
     {
-        string directoryPath = $"{Application.persistentDataPath}/Json";
-        if (Directory.Exists(directoryPath) == false)
+        get
         {
-            Directory.CreateDirectory(directoryPath);
+            if (jsonDirectoryPath == null)
+            {
+                jsonDirectoryPath = $"{Application.persistentDataPath}/Json";
+            }
+            return jsonDirectoryPath;
         }
-
-        string filePath = $"{directoryPath}/{fileName}.json";
-        string jsonData = JsonConvert.SerializeObject(csharpCode);
-        File.WriteAllText(filePath, jsonData);
     }
 
-    public T ConvertJsonToCSharp<T>(string fileName)
+    public void ConvertCSharpToJson<T>(T csharpCode, string jsonFileName)
     {
-        string directoryPath = $"{Application.persistentDataPath}/Json";
-        if (Directory.Exists(directoryPath) == false)
+        if (Directory.Exists(JsonDirectoryPath) == false)
+        {
+            Directory.CreateDirectory(JsonDirectoryPath);
+        }
+
+        string jsonFilePath = $"{JsonDirectoryPath}/{jsonFileName}.json";
+        string jsonData = JsonConvert.SerializeObject(csharpCode);
+        File.WriteAllText(jsonFilePath, jsonData);
+    }
+
+    public T ConvertJsonToCSharp<T>(string jsonFileName)
+    {
+        if (Directory.Exists(JsonDirectoryPath) == false)
         {
             throw new DirectoryNotFoundException();
         }
 
-        string filePath = $"{directoryPath}/{fileName}.json";
-        string jsonData = File.ReadAllText(filePath);
+        string jsonFilePath = $"{JsonDirectoryPath}/{jsonFileName}.json";
+        string jsonData = File.ReadAllText(jsonFilePath);
         T csharpCode = JsonConvert.DeserializeObject<T>(jsonData);
 
         return csharpCode;
